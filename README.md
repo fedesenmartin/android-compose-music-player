@@ -1,18 +1,10 @@
-# Android Compose Music Player
+# Compose Music Player
 
-Simple music player built with **Kotlin + Jetpack Compose** that plays songs from **remote URLs** using `MediaPlayer`.
+Simple Android music player built with Kotlin and Jetpack Compose.
 
-## Features
-
-- Playlist with hardcoded demo songs (MP3 URLs).
-- Play / Pause.
-- Next / Previous track.
-- Minimal dark Material3 UI with Jetpack Compose.
-
-## Requirements
-
-- Android Studio Hedgehog or newer.
-- Android SDK 24+.
+- Plays music from **remote URLs** (no local files required).
+- Basic controls: **play/pause, next, previous**.
+- Minimal architecture with ViewModel + Compose.
 
 ## How to run
 
@@ -20,21 +12,19 @@ Simple music player built with **Kotlin + Jetpack Compose** that plays songs fro
 
    ```bash
    git clone https://github.com/fedesenmartin/android-compose-music-player.git
-   cd android-compose-music-player
    ```
 
-2. Open the project in **Android Studio**.
+2. Open the project in **Android Studio (Giraffe or newer)**.
 
-3. Let Gradle sync.
+3. Let Gradle sync finish.
 
-4. Run the `app` configuration on a device or emulator with internet access.
+4. Run the app on an emulator or physical device with **internet access**.
 
-## Notes
+The playlist uses sample MP3 URLs from SoundHelix.
 
-- Demo songs are short MP3 clips hosted on `samplelib.com`. You can change URLs in:
+## Tech stack
 
-  ```kotlin
-  app/src/main/java/com/example/composemusicplayer/data/FakeSongRepository.kt
-  ```
-
-- The app requests the `INTERNET` permission in the manifest to stream the audio.
+- Kotlin
+- Jetpack Compose + Material3
+- MediaPlayer (URL-based streaming)
+- MVVM-ish structure (ViewModel + simple repository)

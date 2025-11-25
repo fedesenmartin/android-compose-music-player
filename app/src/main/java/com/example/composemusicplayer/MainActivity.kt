@@ -29,53 +29,30 @@ class MainActivity : ComponentActivity() {
                     onSongClick = { index ->
                         viewModel.setCurrentIndex(index)
                         viewModel.setPlaying(true)
-                        uiState.playlist.getOrNull(index)?.let { song ->
-                            playerController.playSong(song) {
-                                // On completion, go to next track
-                                viewModel.next()
-                                val nextSong = viewModel.uiState.value.playlist
-                                    .getOrNull(viewModel.uiState.value.currentIndex)
-                                if (nextSong != null) {
-                                    playerController.playSong(nextSong)
-                                }
-                            }
-                        }
+                        val song = uiState.playlist[index]
+                        playerController.playSong(song)
                     },
                     onPlayPauseClick = {
-                        val currentlyPlaying = playerController.isPlaying()
-                        if (currentlyPlaying) {
-                            playerController.pause()
-                            viewModel.setPlaying(false)
-                        } else {
+                        if (!playerController.isPlaying()) {
+                            // If not playing, ensure current song is loaded
                             val song = uiState.playlist.getOrNull(uiState.currentIndex)
                             if (song != null) {
-                                if (uiState.isPlaying) {
-                                    // Was playing before and only paused
-                                    playerController.resume()
-                                } else {
-                                    playerController.playSong(song)
-                                }
-                                viewModel.setPlaying(true)
+                                playerController.playSong(song)
                             }
+                        } else {
+                            playerController.togglePlayPause()
                         }
+                        viewModel.setPlaying(playerController.isPlaying())
                     },
                     onNextClick = {
                         viewModel.next()
-                        val song = viewModel.uiState.value.playlist
-                            .getOrNull(viewModel.uiState.value.currentIndex)
-                        if (song != null) {
-                            viewModel.setPlaying(true)
-                            playerController.playSong(song)
-                        }
+                        val song = viewModel.uiState.value.playlist[viewModel.uiState.value.currentIndex]
+                        playerController.playSong(song)
                     },
                     onPrevClick = {
                         viewModel.previous()
-                        val song = viewModel.uiState.value.playlist
-                            .getOrNull(viewModel.uiState.value.currentIndex)
-                        if (song != null) {
-                            viewModel.setPlaying(true)
-                            playerController.playSong(song)
-                        }
+                        val song = viewModel.uiState.value.playlist[viewModel.uiState.value.currentIndex]
+                        playerController.playSong(song)
                     }
                 )
             }

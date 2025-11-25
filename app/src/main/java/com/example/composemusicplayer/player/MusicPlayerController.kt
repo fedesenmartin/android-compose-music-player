@@ -8,48 +8,46 @@ import com.example.composemusicplayer.data.Song
 class MusicPlayerController(private val context: Context) {
 
     private var mediaPlayer: MediaPlayer? = null
-    private var currentUrl: String? = null
 
-    fun playSong(song: Song, onCompletion: (() -> Unit)? = null) {
-        if (currentUrl == song.url && mediaPlayer != null) {
-            if (mediaPlayer?.isPlaying == false) {
-                mediaPlayer?.start()
-            }
-            return
-        }
-
-        release()
-
-        currentUrl = song.url
-        mediaPlayer = MediaPlayer().apply {
+    private fun createMediaPlayer(url: String): MediaPlayer {
+        return MediaPlayer().apply {
             setAudioAttributes(
                 AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
                     .build()
             )
-            setDataSource(song.url)
+            setDataSource(url)
             setOnPreparedListener { start() }
             setOnCompletionListener {
-                onCompletion?.invoke()
+                // Do nothing here; ViewModel will manage next/prev.
             }
             prepareAsync()
         }
     }
 
-    fun pause() {
-        mediaPlayer?.takeIf { it.isPlaying }?.pause()
+    fun playSong(song: Song) {
+        stop()
+        mediaPlayer = createMediaPlayer(song.url)
     }
 
-    fun resume() {
-        mediaPlayer?.takeIf { !it.isPlaying }?.start()
+    fun togglePlayPause() {
+        val player = mediaPlayer ?: return
+        if (player.isPlaying) player.pause() else player.start()
     }
 
-    fun isPlaying(): Boolean = mediaPlayer?.isPlaying == true
+    fun isPlaying(): Boolean = mediaPlayer?.isPlaying ?: false
+
+    fun stop() {
+        mediaPlayer?.apply {
+            stop()
+            reset()
+            release()
+        }
+        mediaPlayer = null
+    }
 
     fun release() {
-        mediaPlayer?.release()
-        mediaPlayer = null
-        currentUrl = null
+        stop()
     }
 }

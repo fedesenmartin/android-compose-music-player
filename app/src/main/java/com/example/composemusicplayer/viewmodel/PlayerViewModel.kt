@@ -36,13 +36,14 @@ class PlayerViewModel : ViewModel() {
         val current = _uiState.value
         if (current.playlist.isEmpty()) return
         val nextIndex = (current.currentIndex + 1) % current.playlist.size
-        _uiState.value = current.copy(currentIndex = nextIndex)
+        _uiState.value = current.copy(currentIndex = nextIndex, isPlaying = true)
     }
 
     fun previous() {
         val current = _uiState.value
         if (current.playlist.isEmpty()) return
-        val prevIndex = if (current.currentIndex - 1 < 0) current.playlist.lastIndex else current.currentIndex - 1
-        _uiState.value = current.copy(currentIndex = prevIndex)
+        val prevIndex =
+            if (current.currentIndex - 1 < 0) current.playlist.lastIndex else current.currentIndex - 1
+        _uiState.value = current.copy(currentIndex = prevIndex, isPlaying = true)
     }
 }

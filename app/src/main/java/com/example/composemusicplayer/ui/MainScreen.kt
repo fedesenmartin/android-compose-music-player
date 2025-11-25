@@ -37,7 +37,9 @@ fun MainScreen(
         SongList(
             songs = uiState.playlist,
             currentIndex = uiState.currentIndex,
-            modifier = Modifier.padding(padding),
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
             onSongClick = onSongClick
         )
     }
@@ -51,9 +53,7 @@ private fun SongList(
     onSongClick: (Int) -> Unit
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier = modifier.padding(16.dp)
     ) {
         itemsIndexed(songs) { index, song ->
             val isCurrent = index == currentIndex
